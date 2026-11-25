@@ -3,7 +3,7 @@
 [![CI](https://github.com/Sreeju7733/bharatcode-review-action/actions/workflows/ci.yml/badge.svg)](https://github.com/Sreeju7733/bharatcode-review-action/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Sreeju7733/bharatcode-review-action?color=purple&label=Release)](https://github.com/Sreeju7733/bharatcode-review-action/releases)
 [![Marketplace](https://img.shields.io/badge/Marketplace-BharatCode%20Reviewer-blueviolet?logo=github-actions)](https://github.com/marketplace/actions/bharatcode-pr-reviewer)
-[![Documentation](https://img.shields.io/badge/Docs-GitHub%20Pages-blue)](https://sreeju7733.github.io/bharatcode-review-action/)
+[![Documentation](https://img.shields.io/badge/Docs-GitHub%20Pages-blue)](https://sreeju7733.github.io/bharatcode-review-action/docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Automated, cost-aware AI code review for GitHub pull requests. BharatCode analyzes unified diffs, surfaces security vulnerabilities and logic bugs, posts inline comments with one-click GitHub suggestions, updates PR severity labels, and provides enforceable gate check-runs.
@@ -334,7 +334,7 @@ The full interactive documentation portal is hosted via GitHub Pages in the [`do
 - 💰 **Token Optimization & Budget Guardrails**
 
 Visit the live documentation site:
-👉 **[https://sreeju7733.github.io/bharatcode-review-action/](https://sreeju7733.github.io/bharatcode-review-action/)**
+[https://sreeju7733.github.io/bharatcode-review-action/docs/](https://sreeju7733.github.io/bharatcode-review-action/docs/)
 
 ---
 
