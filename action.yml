@@ -1,0 +1,98 @@
+name: "BharatCode PR Reviewer"
+description: "Enterprise PR review: inline comments, summaries, severity labels, cost controls"
+author: "BharatCode-ai"
+branding:
+  icon: "eye"
+  color: "purple"
+
+inputs:
+  bharatcode-api-key:
+    required: true
+    description: "BharatCode API key"
+  bharatcode-base-url:
+    required: false
+    default: "https://api.bharatcode.ai/v1"
+  model:
+    required: false
+    default: "deepseek-v4.1-flash"
+  github-token:
+    required: true
+    description: "Token with pull-requests: write"
+
+  # Diff handling
+  max-diff-chars:
+    required: false
+    default: "24000"
+  max-input-tokens:
+    required: false
+    default: "60000"
+  chunk-strategy:
+    required: false
+    default: "file"   # file | hunk | token
+  ignore-globs:
+    required: false
+    default: "**/*.lock,**/dist/**,**/*.min.js,**/*.map"
+  include-globs:
+    required: false
+    default: ""
+
+  # Review behavior
+  mode:
+    required: false
+    default: "summary+inline"  # summary | inline | summary+inline | gate
+  severity-threshold:
+    required: false
+    default: "warning"         # info | warning | error
+  fail-on-severity:
+    required: false
+    default: "none"           # none | error | warning
+  post-labels:
+    required: false
+    default: "true"
+  label-map:
+    required: false
+    default: "error:bug,warning:needs-review,info:nit"
+
+  # Reliability
+  max-retries:
+    required: false
+    default: "3"
+  request-timeout-ms:
+    required: false
+    default: "60000"
+  concurrency:
+    required: false
+    default: "3"              # parallel chunk reviews
+
+  # Cost control
+  max-usd-budget:
+    required: false
+    default: "0"              # 0 = unlimited
+  dry-run:
+    required: false
+    default: "false"
+  cache-enabled:
+    required: false
+    default: "true"
+
+  # Safety
+  allow-forks:
+    required: false
+    default: "false"
+  config-path:
+    required: false
+    default: ".bharatcode-review.yml"
+
+outputs:
+  findings-count:
+    description: "Total findings"
+  error-count:
+    description: "Findings at error severity"
+  est-usd:
+    description: "Estimated API spend"
+  review-url:
+    description: "URL of the posted review"
+
+runs:
+  using: "node20"
+  main: "dist/index.js"

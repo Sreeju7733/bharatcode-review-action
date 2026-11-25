@@ -1,0 +1,22 @@
+name: Bug report
+description: Create a report to help us improve BharatCode PR Reviewer
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report a bug!
+  - type: input
+    id: version
+    attributes:
+      label: Action Version
+      description: What version or commit tag of the action are you running?
+      placeholder: v1 or v1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Description & Steps to Reproduce
+      description: Describe what happened and provide workflow snippet or run logs.
+    validations:
+      required: true

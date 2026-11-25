@@ -1,0 +1,29 @@
+name: BharatCode Self-Review (Dogfood)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+
+jobs:
+  review:
+    name: Review PR Changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run BharatCode Review Action
+        uses: ./
+        with:
+          bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mode: "summary+inline"
+          severity-threshold: "warning"
+          fail-on-severity: "error"
+          cache-enabled: "true"
