@@ -40,7 +40,7 @@ jobs:
       checks: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Run BharatCode Review Action
         uses: BharatCode-ai/bharatcode-review-action@v1
