@@ -40,15 +40,15 @@ Automated, cost-aware AI code review for GitHub pull requests. BharatCode analyz
 
 ## Features
 
-- **🎯 Inline Review Comments & Suggestions**: Maps findings to changed diff lines with GitHub-native ````suggestion` code blocks.
-- **📊 Consolidated PR Summary**: Comprehensive Markdown overview grouping findings by severity (🚨 errors, ⚠️ warnings, ℹ️ nits) with direct line permalinks.
-- **🏷️ Automated Severity Labeling**: Syncs labels (`bug`, `needs-review`, `nit`) automatically as code is pushed and resolved.
-- **🛡️ Quality Gate & Failure Thresholds**: Optionally fails status checks on `error` or `warning` to prevent merging flawed code (`fail-on-severity`).
-- **⚡ Pre-Flight Regex Rules**: Executes zero-cost pattern matching (e.g., catching `console.log`, secrets) locally before calling LLMs.
-- **💾 Commit-SHA Caching**: Caches review payloads per commit SHA, prompt hash, and model version to prevent duplicate spend.
-- **🌐 Dual-Tier Model Support**: Default lightweight `glm-5.3-flash` (10M free tokens/day) with seamless upgrade path to `deepseek-v4.1-flash`.
-- **🔄 Multi-Provider Failover**: Automatically cascades to OpenAI (`gpt-4o-mini`) or Anthropic (`claude-3-5-haiku`) if primary API encounters upstream 5xx/429 errors.
-- **📑 SARIF 2.1.0 Export**: Produces standardized reports compatible with GitHub Advanced Security Code Scanning.
+- **Inline Review Comments & Suggestions**: Maps findings directly to modified diff lines with GitHub-native code suggestion blocks.
+- **Consolidated PR Summary**: Markdown overview grouping findings by severity (errors, warnings, nits) with direct line permalinks.
+- **Automated Severity Labeling**: Automatically synchronizes labels (bug, needs-review, nit) as code is pushed and resolved.
+- **Quality Gate & Failure Thresholds**: Optionally fails status checks on error or warning to prevent merging flawed code (fail-on-severity).
+- **Pre-Flight Regex Rules**: Executes zero-cost pattern matching (e.g., catching console.log, hardcoded keys) locally before calling LLMs.
+- **Commit-SHA Caching**: Caches review payloads per commit SHA, prompt hash, and model version to prevent duplicate spend.
+- **Dual-Tier Model Support**: Default lightweight glm-5.3-flash (10M free tokens/day) with seamless upgrade path to deepseek-v4.1-flash.
+- **Multi-Provider Failover**: Automatically cascades to OpenAI (gpt-4o-mini) or Anthropic (claude-3-5-haiku) if primary API encounters upstream 5xx or 429 errors.
+- **SARIF 2.1.0 Export**: Produces standardized reports compatible with GitHub Advanced Security Code Scanning.
 
 ---
 
