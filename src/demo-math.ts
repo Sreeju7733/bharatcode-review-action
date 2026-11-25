@@ -13,6 +13,7 @@ export function divideNumbers(a: number, b: number): number {
   if (b === 0) {
     throw new RangeError("Division by zero is not permitted.");
   }
+if (b === 0) throw new RangeError("Division by zero");
   return a / b;
 }
 
