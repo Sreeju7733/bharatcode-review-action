@@ -10,7 +10,7 @@ const VALID_FAIL_ON_SEVERITY: FailOnSeverity[] = ["none", "error", "warning"];
 export function parseInputs(): ActionInputs {
   const bharatcodeApiKey = core.getInput("bharatcode-api-key", { required: true });
   const bharatcodeBaseUrl = core.getInput("bharatcode-base-url") || "https://bharatcode.ai/api/model/v1";
-  const model = core.getInput("model") || "deepseek-v4.1-flash";
+  const model = core.getInput("model") || "glm-5.3-flash";
   const githubToken = core.getInput("github-token", { required: true });
 
   const maxDiffChars = parseInt(core.getInput("max-diff-chars") || "24000", 10);

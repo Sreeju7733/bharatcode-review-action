@@ -25,6 +25,7 @@ import { ChunkReview, Finding } from "./types.js";
 
 // Pricing per 1k tokens: [input, output] in USD
 const MODEL_PRICING: Record<string, [number, number]> = {
+  "glm-5.3-flash": [0.0001, 0.0002],
   "deepseek-v4.1-flash": [0.00014, 0.00028],
   "deepseek-v4.1-pro": [0.0008, 0.0016],
   default: [0.0002, 0.0004],

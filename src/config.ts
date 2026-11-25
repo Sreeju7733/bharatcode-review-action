@@ -48,7 +48,7 @@ export function mergeConfig(inputs: ActionInputs, repoConfig: RepoConfigFile | n
     // Note: The prompt states: "Repo-level config that merges over inputs (inputs win)"
     // So if inputs has default or custom, if we want repo-level defaults:
     // When input is default, we can allow repoConfig to override if present:
-    model: inputs.model === "deepseek-v4.1-flash" && repoConfig.model ? repoConfig.model : inputs.model,
+    model: (inputs.model === "glm-5.3-flash" || inputs.model === "deepseek-v4.1-flash") && repoConfig.model ? repoConfig.model : inputs.model,
     severityThreshold:
       inputs.severityThreshold === "warning" && repoConfig["severity-threshold"]
         ? repoConfig["severity-threshold"]
