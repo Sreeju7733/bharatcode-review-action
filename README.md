@@ -76,7 +76,7 @@ BharatCode PR Reviewer supports both action inputs in your workflow file and rep
 | `bharatcode-api-key` | String | **Required** | BharatCode API key. Pass via repository or organization secrets. |
 | `github-token` | String | **Required** | GitHub token with `pull-requests: write` and `issues: write` permissions. |
 | `bharatcode-base-url` | String | `https://bharatcode.ai/api/model/v1` | Custom endpoint for BharatCode API instances. |
-| `model` | String | `deepseek-v4.1-flash` | Model identifier used for evaluation. |
+| `model` | String | `glm-5.3-flash` | Model identifier used for evaluation (`glm-5.3-flash`, `deepseek-v4.1-flash`). |
 | `mode` | String | `summary+inline` | Review presentation mode: `summary`, `inline`, `summary+inline`, or `gate`. |
 | `severity-threshold` | String | `warning` | Minimum severity level to report: `info`, `warning`, or `error`. |
 | `fail-on-severity` | String | `none` | Fails the action run if findings meet this threshold: `none`, `warning`, or `error`. |
@@ -115,8 +115,8 @@ BharatCode PR Reviewer supports both action inputs in your workflow file and rep
 Place a `.bharatcode-review.yml` file in your repository root to enforce local rules and directory-specific thresholds:
 
 ```yaml
-# Default model override
-model: deepseek-v4.1-flash
+# Default model override (optional, defaults to glm-5.3-flash)
+model: glm-5.3-flash
 
 # Global severity filter
 severity-threshold: warning
