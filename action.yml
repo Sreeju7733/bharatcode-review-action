@@ -14,7 +14,7 @@ inputs:
     default: "https://bharatcode.ai/api/model/v1"
   model:
     required: false
-    default: "deepseek-v4.1-flash"
+    default: "glm-5.3-flash"
   github-token:
     required: true
     description: "Token with pull-requests: write"

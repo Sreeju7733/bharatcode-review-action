@@ -29,7 +29,7 @@ describe("Inputs (inputs.ts)", () => {
     const inputs = parseInputs();
     expect(inputs.bharatcodeApiKey).toBe("test-api-key");
     expect(inputs.githubToken).toBe("test-gh-token");
-    expect(inputs.model).toBe("deepseek-v4.1-flash");
+    expect(inputs.model).toBe("glm-5.3-flash");
     expect(inputs.chunkStrategy).toBe("file");
     expect(inputs.mode).toBe("summary+inline");
     expect(inputs.severityThreshold).toBe("warning");
