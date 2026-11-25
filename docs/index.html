@@ -29,7 +29,7 @@
         <a href="#overview">Overview</a>
         <a href="#quickstart">Quickstart</a>
         <a href="#organization-rollout">Org Rollout</a>
-        <a href="#configuration">Configuration</a>
+        <a href="#action-inputs">Inputs</a>
         <a href="#failover">Failover</a>
       </nav>
 
@@ -186,6 +186,30 @@ jobs:
         </div>
       </section>
 
+      <!-- Capabilities: Inline Reviews -->
+      <section id="inline-reviews" class="section">
+        <h2>Inline Review Comments & Suggestions</h2>
+        <p>
+          BharatCode inspects the diff changes and uses GitHub's <code>pulls.createReview</code> API to post comments directly on the exact lines in the diff. When a correction is straightforward, it generates GitHub-native code suggestions that maintainers can commit right from the PR review UI.
+        </p>
+      </section>
+
+      <!-- Capabilities: Regex Rules -->
+      <section id="regex-rules" class="section">
+        <h2>Local Regex Engine</h2>
+        <p>
+          To save API tokens and enforce immediate code standards, BharatCode executes local regex patterns before making any network calls. If a pattern matches, an error or warning is reported with zero latency and zero token spend.
+        </p>
+      </section>
+
+      <!-- Capabilities: Quality Gates -->
+      <section id="quality-gates" class="section">
+        <h2>Quality Gates & Merge Protection</h2>
+        <p>
+          Configure <code>fail-on-severity: "error"</code> to block pull requests from merging if critical security flaws, remote execution sinks (like <code>eval()</code>), or unhandled errors are introduced. The GitHub Actions check run will fail until the code is corrected.
+        </p>
+      </section>
+
       <!-- Organization Rollout -->
       <section id="organization-rollout" class="section">
         <h2>Organization-Wide Rollout</h2>
@@ -312,6 +336,34 @@ rules:
     severity: error
     category: security
     message: "Potential AWS access key detected."</code></pre>
+        </div>
+
+        <h3 id="supported-models">Supported Models</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Tier</th>
+                <th>Context</th>
+                <th>Best For</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>glm-5.3-flash</code></td>
+                <td>Standard / Free (10M tokens/day)</td>
+                <td>256k</td>
+                <td>Default for general pull requests, quick diff feedback, and style checks.</td>
+              </tr>
+              <tr>
+                <td><code>deepseek-v4.1-flash</code></td>
+                <td>BharatCode Pro</td>
+                <td>1M</td>
+                <td>Deep reasoning across large, complex multi-file pull requests.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
