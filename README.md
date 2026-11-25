@@ -340,6 +340,8 @@ Visit the live documentation site:
 
 ## Contributing & License
 
-Contributions are welcome! Please read [CONTRIBUTING.md](file:///home/sreeju/Projects/bharatcode-review-action/CONTRIBUTING.md) and [SECURITY.md](file:///home/sreeju/Projects/bharatcode-review-action/SECURITY.md) before opening pull requests.
+Contributions are welcome. Please read [CONTRIBUTING.md](file:///home/sreeju/Projects/bharatcode-review-action/CONTRIBUTING.md) and [SECURITY.md](file:///home/sreeju/Projects/bharatcode-review-action/SECURITY.md) before opening pull requests.
+
+Created by [Sreeju S](https://github.com/Sreeju7733) & [Flovo](https://github.com/flovo-labs).
 
 Released under the [MIT License](file:///home/sreeju/Projects/bharatcode-review-action/LICENSE). Copyright (c) 2026 BharatCode AI.

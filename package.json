@@ -13,7 +13,10 @@
     "size-check": "node scripts/check-size.js",
     "prepare": "npm run build"
   },
-  "author": "Sreeju S (Flovo Labs)",
+  "author": {
+    "name": "Sreeju S",
+    "url": "https://github.com/Sreeju7733"
+  },
   "homepage": "https://github.com/flovo-labs",
   "license": "MIT",
   "dependencies": {
