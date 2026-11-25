@@ -1,5 +1,5 @@
 name: "BharatCode PR Reviewer by Flovo"
-description: "AI-powered PR reviewer by Flovo: inline comments, summaries, severity labels, cost controls"
+description: "Open-source AI pull request reviewer by Flovo: inline comments, suggestions, and auto-labels"
 author: "Flovo"
 branding:
   icon: "check-circle"

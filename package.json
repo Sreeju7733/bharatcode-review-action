@@ -1,7 +1,7 @@
 {
   "name": "bharatcode-review-action",
   "version": "1.0.0",
-  "description": "Enterprise PR review: inline comments, summaries, severity labels, cost controls",
+  "description": "Open-source GitHub Action for AI pull request code reviews by Flovo using BharatCode AI",
   "main": "dist/index.js",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --minify --outfile=dist/index.js",
