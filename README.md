@@ -1,19 +1,41 @@
-# BharatCode PR Reviewer (`bharatcode-review-action`)
+# BharatCode PR Reviewer
 
-[![CI](https://github.com/BharatCode-ai/bharatcode-review-action/actions/workflows/ci.yml/badge.svg)](https://github.com/BharatCode-ai/bharatcode-review-action/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/github/v/release/BharatCode-ai/bharatcode-review-action?style=flat-square)](https://github.com/BharatCode-ai/bharatcode-review-action/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Automated code review for GitHub pull requests. BharatCode analyzes incoming diffs, maps findings directly to lines in your changes, provides one-click suggestions, and syncs severity labels without human intervention.
 
-Enterprise-grade, automated pull request code review bot powered by **BharatCode AI**. Features inline comments with code suggestions, structured markdown summaries, severity label syncing, local regex rules, commit-SHA caching, and strict cost controls.
+```yaml
+- uses: BharatCode-ai/bharatcode-review-action@v1
+  with:
+    bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+```
 
 ---
 
-## ⚡ 30-Second Quickstart
+## Overview
 
-Add this 3-line step to your repository's `.github/workflows/review.yml`:
+BharatCode PR Reviewer inspects unified diffs on pull requests to identify security vulnerabilities, logical bugs, and maintainability concerns. It operates entirely within GitHub Actions and posts results directly into the pull request conversation.
+
+### What it does
+
+- **Inline review comments**: Posts comments directly on modified lines via `pulls.createReview`.
+- **One-click suggestions**: Emits GitHub suggestion blocks for unambiguous, single-line corrections.
+- **Summary table**: Generates a consolidated markdown overview grouping findings by severity.
+- **Severity labels**: Automatically synchronizes repository labels (`bug`, `needs-review`, `nit`) based on active findings.
+- **Local regex rules**: Executes zero-cost pattern checks before sending diffs to language models.
+- **Commit-SHA caching**: Caches review payloads to avoid duplicate API spend on re-runs against unchanged code.
+- **SARIF 2.1.0 output**: Generates standard static analysis reports for GitHub Code Scanning integration.
+- **On-demand triggers**: Supports `/bharatcode review` comments from authorized contributors.
+- **Multi-provider failover**: Automatically fails over to OpenAI or Anthropic if the primary API is unreachable.
+
+---
+
+## Quickstart
+
+Add the following workflow to `.github/workflows/review.yml`:
 
 ```yaml
-name: BharatCode Review
+name: Code Review
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -28,6 +50,151 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run BharatCode Reviewer
+        uses: BharatCode-ai/bharatcode-review-action@v1
+        with:
+          bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mode: "summary+inline"
+          severity-threshold: "warning"
+          fail-on-severity: "error"
+```
+
+---
+
+## Configuration
+
+BharatCode PR Reviewer supports both action inputs in your workflow file and repository-level configuration via `.bharatcode-review.yml`.
+
+### Action inputs
+
+| Input | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `bharatcode-api-key` | String | **Required** | BharatCode API key. Pass via repository or organization secrets. |
+| `github-token` | String | **Required** | GitHub token with `pull-requests: write` and `issues: write` permissions. |
+| `bharatcode-base-url` | String | `https://api.bharatcode.ai/v1` | Custom endpoint for BharatCode API instances. |
+| `model` | String | `deepseek-v4.1-flash` | Model identifier used for evaluation. |
+| `mode` | String | `summary+inline` | Review presentation mode: `summary`, `inline`, `summary+inline`, or `gate`. |
+| `severity-threshold` | String | `warning` | Minimum severity level to report: `info`, `warning`, or `error`. |
+| `fail-on-severity` | String | `none` | Fails the action run if findings meet this threshold: `none`, `warning`, or `error`. |
+| `post-labels` | Boolean | `true` | Automatically synchronizes severity labels on the pull request. |
+| `label-map` | String | `error:bug,warning:needs-review,info:nit` | Comma-separated mapping between severity levels and label names. |
+| `chunk-strategy` | String | `file` | Strategy for splitting diffs: `file` (default), `hunk`, or `token`. |
+| `max-diff-chars` | Number | `24000` | Character threshold for diff evaluation before aggressive chunking. |
+| `max-input-tokens` | Number | `60000` | Maximum token ceiling per evaluation chunk. |
+| `ignore-globs` | String | `**/*.lock,**/dist/**,...` | Comma-separated glob patterns to exclude from analysis. |
+| `include-globs` | String | `""` | Comma-separated glob patterns to include exclusively. |
+| `concurrency` | Number | `3` | Maximum concurrent API chunk requests. |
+| `max-usd-budget` | Number | `0` | Hard spending limit per review run in USD (`0` = unlimited). |
+| `cache-enabled` | Boolean | `true` | Caches review results keyed by commit SHA, model, and prompt version. |
+| `allow-forks` | Boolean | `false` | Allows review execution on pull requests originating from forks. |
+| `dry-run` | Boolean | `false` | Runs analysis and outputs to logs without calling GitHub write endpoints. |
+| `sarif-output` | Boolean | `false` | Writes findings to a SARIF 2.1.0 file. |
+| `sarif-path` | String | `bharatcode-review.sarif` | Destination path for the generated SARIF file. |
+| `fallback-providers` | String | `""` | Comma-separated fallback providers: `openai`, `anthropic`. |
+| `openai-api-key` | String | `""` | API key for OpenAI fallback requests. |
+| `anthropic-api-key` | String | `""` | API key for Anthropic fallback requests. |
+| `config-path` | String | `.bharatcode-review.yml` | Path to repository configuration file. |
+
+### Outputs
+
+| Output | Description |
+| :--- | :--- |
+| `findings-count` | Total number of findings after filtering and deduplication. |
+| `error-count` | Total number of findings classified as `error`. |
+| `est-usd` | Total estimated API cost for the run formatted to 4 decimal places. |
+| `review-url` | Direct URL to the created summary comment or inline review. |
+
+---
+
+## Repository configuration (`.bharatcode-review.yml`)
+
+Place a `.bharatcode-review.yml` file in your repository root to enforce local rules and directory-specific thresholds:
+
+```yaml
+# Default model override
+model: deepseek-v4.1-flash
+
+# Global severity filter
+severity-threshold: warning
+
+# File patterns to exclude
+ignore-globs:
+  - "docs/**"
+  - "**/*.lock"
+  - "**/generated/**"
+
+# Pre-flight regex checks (executed locally at zero API cost)
+rules:
+  - name: no-console-log
+    pattern: 'console\.(log|debug)'
+    severity: warning
+    category: style
+    message: "Remove console debugging statements before merging."
+
+  - name: avoid-hardcoded-secrets
+    pattern: 'AKIA[0-9A-Z]{16}'
+    severity: error
+    category: security
+    message: "Potential AWS Access Key detected in diff."
+
+# Path-specific threshold overrides
+paths:
+  "src/auth/**":
+    severity-threshold: info # Report all findings in authentication code
+
+  "tests/**":
+    severity-threshold: error # Suppress non-critical findings in tests
+```
+
+---
+
+## Advanced integrations
+
+### GitHub Code Scanning (SARIF)
+
+To pipe BharatCode findings into the GitHub Security tab:
+
+```yaml
+- name: Run BharatCode Reviewer
+  uses: BharatCode-ai/bharatcode-review-action@v1
+  with:
+    bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    sarif-output: "true"
+
+- name: Upload to GitHub Security
+  uses: github/codeql-action/upload-sarif@v4
+  if: always()
+  with:
+    sarif_file: bharatcode-review.sarif
+    category: bharatcode-review
+```
+
+### Slash command re-trigger
+
+Developers can trigger an on-demand review by commenting `/bharatcode review` on any open pull request.
+
+```yaml
+name: On-Demand Review
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: read
+
+jobs:
+  slash-review:
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/bharatcode review')
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
       - uses: BharatCode-ai/bharatcode-review-action@v1
         with:
@@ -35,143 +202,19 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
----
-
-## 📋 Full Input Reference
-
-| Input | Required | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `bharatcode-api-key` | **Yes** | — | BharatCode API key (`secrets.BHARATCODE_API_KEY`) |
-| `github-token` | **Yes** | — | GitHub token with `pull-requests: write`, `issues: write` |
-| `bharatcode-base-url` | No | `https://api.bharatcode.ai/v1` | BharatCode API base endpoint |
-| `model` | No | `deepseek-v4.1-flash` | LLM model for review |
-| `max-diff-chars` | No | `24000` | Max character diff threshold before aggressive filtering |
-| `max-input-tokens` | No | `60000` | Maximum token limit per API chunk |
-| `chunk-strategy` | No | `file` | Chunking mode: `file`, `hunk`, or `token` |
-| `ignore-globs` | No | `**/*.lock,**/dist/**,...` | Comma-separated glob patterns to ignore |
-| `include-globs` | No | `""` | Comma-separated glob patterns to include exclusively |
-| `mode` | No | `summary+inline` | Review mode: `summary`, `inline`, `summary+inline`, `gate` |
-| `severity-threshold` | No | `warning` | Minimum severity to report: `info`, `warning`, `error` |
-| `fail-on-severity` | No | `none` | Fails workflow or gate if reached: `none`, `error`, `warning` |
-| `post-labels` | No | `true` | Whether to automatically apply severity labels on PR |
-| `label-map` | No | `error:bug,warning:needs-review,info:nit` | Mapping of findings severity to GitHub PR labels |
-| `max-retries` | No | `3` | Maximum API retries on 429/5xx status codes |
-| `request-timeout-ms` | No | `60000` | HTTP request timeout in milliseconds |
-| `concurrency` | No | `3` | Parallel API chunk evaluation concurrency |
-| `max-usd-budget` | No | `0` | Max USD spend cap per PR run (`0` = unlimited) |
-| `dryRun` / `dry-run` | No | `false` | Run full analysis and print to stdout without write API calls |
-| `cache-enabled` | No | `true` | Enable commit-SHA & model review caching |
-| `allow-forks` | No | `false` | Allow execution on PRs originating from forks |
-| `config-path` | No | `.bharatcode-review.yml` | Path to repository-level configuration file |
-
-### Outputs
-
-| Output | Description |
-| :--- | :--- |
-| `findings-count` | Total findings identified |
-| `error-count` | Number of findings with `error` severity |
-| `est-usd` | Total estimated API spend in USD |
-| `review-url` | URL of the posted comment or inline review |
+Only comments authored by users with `OWNER`, `MEMBER`, or `COLLABORATOR` permissions will trigger the workflow. Unauthorized attempts are ignored.
 
 ---
 
-## ⚙️ Repository Configuration (`.bharatcode-review.yml`)
+## Security and privacy
 
-Configure repo-wide rules, custom local regex patterns (zero API spend), and path-specific overrides:
-
-```yaml
-model: deepseek-v4.1-flash
-severity-threshold: warning
-ignore-globs:
-  - "docs/**"
-  - "**/*.lock"
-
-# Zero-cost local regex checks evaluated before LLM pass
-rules:
-  - name: "no-console-log"
-    pattern: "console\\.log"
-    severity: warning
-    message: "Remove console.log before merging."
-  - name: "no-todo"
-    pattern: "TODO|FIXME"
-    severity: info
-    message: "Resolve remaining TODOs or track in an issue."
-
-# Per-path severity overrides
-paths:
-  "src/payments/**":
-    severity-threshold: error   # Strict error-only filtering for payments
-  "tests/**":
-    severity-threshold: info    # Relaxed rules for tests
-```
+- **Source Code Transit**: Diff contents are transmitted securely over TLS directly to the configured API endpoint. Code is never stored or persisted beyond the lifecycle of the Action run.
+- **Secrets Protection**: API credentials and GitHub tokens are registered as sensitive strings and automatically masked in workflow logs.
+- **Fork Restrictions**: By default, `allow-forks` is set to `false`. Pull requests originating from external forks will not execute API requests unless explicitly enabled in trusted environments.
+- **No Direct Commits**: BharatCode PR Reviewer strictly writes comments, labels, and check runs. It never commits or pushes changes to repository branches.
 
 ---
 
-## 📦 Structured JSON Output Schema
+## License
 
-BharatCode models return validated structured JSON via Zod:
-
-```json
-{
-  "summary": "Reviewed 3 files. Identified a SQL injection vulnerability in user lookup.",
-  "findings": [
-    {
-      "file": "src/db/users.ts",
-      "line": 42,
-      "severity": "error",
-      "category": "security",
-      "title": "SQL Injection Vulnerability",
-      "message": "User input is directly concatenated into SQL query string.",
-      "suggestion": "const user = await db.query('SELECT * FROM users WHERE id = ?', [id]);",
-      "confidence": 0.95
-    }
-  ]
-}
-```
-
-*Note: If the LLM returns unstructured output, the parser safely falls back to markdown mode without crashing.*
-
----
-
-## 💰 Cost Estimation Table
-
-Estimated pricing per 1,000 tokens:
-
-| Model | Input / 1k Tokens | Output / 1k Tokens | Avg PR Spend (10 files) |
-| :--- | :--- | :--- | :--- |
-| `deepseek-v4.1-flash` | **$0.00014** | **$0.00028** | ~$0.001 - $0.004 |
-| `deepseek-v4.1-pro` | **$0.00080** | **$0.00160** | ~$0.008 - $0.020 |
-| *Default fallback* | $0.00020 | $0.00040 | ~$0.002 - $0.006 |
-
----
-
-## 🛡️ Security & Fork Protection
-
-- **Fork PRs**: By default, `allow-forks: false`. PRs from public forks do not execute LLM requests or expose repository secrets unless explicitly enabled.
-- **Secret Masking**: All secrets and API keys are automatically masked in workflow logs via `@actions/core`.
-- **Zero-Auto-Commit**: The action never pushes git commits directly to author branches.
-
----
-
-## 🔍 Troubleshooting
-
-- **Rate Limits (HTTP 429)**: The action automatically retries up to `max-retries` times with exponential backoff, jitter, and honors the `Retry-After` header.
-- **Oversized Diffs**: Individual files > 50 KB are skipped automatically. Adjust `chunk-strategy: hunk` or `token` for large files.
-- **Dropped Inline Comments**: GitHub's API only allows comments on lines included in modified diff hunks. Out-of-hunk findings are retained in the markdown summary table and skipped inline.
-
----
-
-## ⚖️ Comparison vs. Lightweight V1
-
-| Feature | Lightweight v1 | BharatCode Review Action |
-| :--- | :--- | :--- |
-| **Output Format** | Unstructured text | Structured JSON validated by Zod |
-| **Inline Comments** | Basic file comments | Exact diff-position mapped inline comments |
-| **Suggested Code Fixes** | ❌ No | ✅ Yes (`suggestion` markdown blocks) |
-| **Local Pre-Flight Rules** | ❌ No | ✅ Yes (Regex-based, $0 API spend) |
-| **Diff Chunking** | Simple naive split | File, Hunk, and Token-packing strategies |
-| **Commit-SHA Caching** | ❌ No | ✅ Yes (Skips repeated runs on same SHA) |
-| **Budget & Cost Controls** | ❌ No | ✅ Yes (`max-usd-budget` hard caps) |
-| **Severity PR Labels** | ❌ No | ✅ Yes (Auto-syncs labels) |
-| **Check Run Gate Mode** | ❌ No | ✅ Yes (Blocks PR merges) |
-| **Telemetry** | Basic console | OTLP OpenTelemetry + Action Summary |
+This project is licensed under the [MIT License](LICENSE).

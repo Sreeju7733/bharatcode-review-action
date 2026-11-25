@@ -1,0 +1,52 @@
+# .bharatcode-review.yml
+# Repository configuration for BharatCode PR Reviewer
+# Schema reference: https://github.com/BharatCode-ai/bharatcode-review-action
+
+# Model selection for review analysis
+model: deepseek-v4.1-flash
+
+# Minimum severity level to report: info | warning | error
+severity-threshold: warning
+
+# Action failure condition: none | warning | error
+fail-on-severity: error
+
+# File patterns to exclude from automated review
+ignore-globs:
+  - "docs/**"
+  - "**/*.lock"
+  - "**/dist/**"
+  - "**/*.min.js"
+  - "**/*.map"
+  - "**/generated/**"
+
+# Pre-flight regex rules (evaluated locally before calling language models)
+rules:
+  - name: no-console-log
+    pattern: 'console\.(log|debug)'
+    severity: warning
+    category: style
+    message: "Remove console debugging calls before merging."
+
+  - name: no-fixme-todos
+    pattern: 'FIXME:'
+    severity: info
+    category: other
+    message: "Track remaining technical debt in an issue before merge."
+
+  - name: avoid-raw-sql-concatenation
+    pattern: 'SELECT.+FROM.+\+\s*[a-zA-Z0-9_]+'
+    severity: error
+    category: security
+    message: "Possible SQL string concatenation detected. Use parameterized queries."
+
+# Path-specific threshold overrides
+paths:
+  "src/auth/**":
+    severity-threshold: info # Surface all findings in security-critical authentication code
+
+  "src/billing/**":
+    fail-on-severity: warning # Block merges on both warnings and errors in billing logic
+
+  "tests/**":
+    severity-threshold: error # Suppress informational nits and warnings in test suites
