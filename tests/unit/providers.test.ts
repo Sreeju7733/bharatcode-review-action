@@ -9,7 +9,7 @@ import { UpstreamError } from "../../src/errors.js";
 
 describe("Multi-Provider Fallback (providers.ts)", () => {
   it("calls primary provider when successful", async () => {
-    const primary = new BharatCodeProvider("bc-key", "https://api.bharatcode.ai/v1", 5000, 1);
+    const primary = new BharatCodeProvider("bc-key", "https://bharatcode.ai/api/model/v1", 5000, 1);
     vi.spyOn(primary, "chat").mockResolvedValue({
       content: "primary content",
       usage: { prompt_tokens: 10, completion_tokens: 5 },
@@ -27,7 +27,7 @@ describe("Multi-Provider Fallback (providers.ts)", () => {
   });
 
   it("fails over to OpenAI when primary encounters retryable UpstreamError", async () => {
-    const primary = new BharatCodeProvider("bc-key", "https://api.bharatcode.ai/v1", 5000, 1);
+    const primary = new BharatCodeProvider("bc-key", "https://bharatcode.ai/api/model/v1", 5000, 1);
     vi.spyOn(primary, "chat").mockRejectedValue(new UpstreamError("500 Server Error", 500, "error", true));
 
     const openai = new OpenAIProvider("openai-key");
@@ -44,7 +44,7 @@ describe("Multi-Provider Fallback (providers.ts)", () => {
   });
 
   it("fails over to Anthropic when primary and OpenAI fail", async () => {
-    const primary = new BharatCodeProvider("bc-key", "https://api.bharatcode.ai/v1", 5000, 1);
+    const primary = new BharatCodeProvider("bc-key", "https://bharatcode.ai/api/model/v1", 5000, 1);
     vi.spyOn(primary, "chat").mockRejectedValue(new UpstreamError("500 Server Error", 500, "error", true));
 
     const openai = new OpenAIProvider("openai-key");
@@ -63,7 +63,7 @@ describe("Multi-Provider Fallback (providers.ts)", () => {
   });
 
   it("does not fallback on non-retryable 401 Unauthorized", async () => {
-    const primary = new BharatCodeProvider("bc-key", "https://api.bharatcode.ai/v1", 5000, 1);
+    const primary = new BharatCodeProvider("bc-key", "https://bharatcode.ai/api/model/v1", 5000, 1);
     vi.spyOn(primary, "chat").mockRejectedValue(new UpstreamError("401 Unauthorized", 401, "invalid key", false));
 
     const openai = new OpenAIProvider("openai-key");

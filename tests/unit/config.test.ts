@@ -9,7 +9,7 @@ describe("Repo Config (.bharatcode-review.yml loader & merge)", () => {
 
   const baseInputs: ActionInputs = {
     bharatcodeApiKey: "key-123",
-    bharatcodeBaseUrl: "https://api.bharatcode.ai/v1",
+    bharatcodeBaseUrl: "https://bharatcode.ai/api/model/v1",
     model: "deepseek-v4.1-flash",
     githubToken: "token-abc",
     maxDiffChars: 24000,

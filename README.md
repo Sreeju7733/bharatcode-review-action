@@ -75,7 +75,7 @@ BharatCode PR Reviewer supports both action inputs in your workflow file and rep
 | :--- | :--- | :--- | :--- |
 | `bharatcode-api-key` | String | **Required** | BharatCode API key. Pass via repository or organization secrets. |
 | `github-token` | String | **Required** | GitHub token with `pull-requests: write` and `issues: write` permissions. |
-| `bharatcode-base-url` | String | `https://api.bharatcode.ai/v1` | Custom endpoint for BharatCode API instances. |
+| `bharatcode-base-url` | String | `https://bharatcode.ai/api/model/v1` | Custom endpoint for BharatCode API instances. |
 | `model` | String | `deepseek-v4.1-flash` | Model identifier used for evaluation. |
 | `mode` | String | `summary+inline` | Review presentation mode: `summary`, `inline`, `summary+inline`, or `gate`. |
 | `severity-threshold` | String | `warning` | Minimum severity level to report: `info`, `warning`, or `error`. |
