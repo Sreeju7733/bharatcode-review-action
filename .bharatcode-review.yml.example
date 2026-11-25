@@ -1,6 +1,6 @@
 # .bharatcode-review.yml
 # Repository configuration for BharatCode PR Reviewer
-# Schema reference: https://github.com/BharatCode-ai/bharatcode-review-action
+# Schema reference: https://github.com/Sreeju7733/bharatcode-review-action
 
 # Model selection for review analysis: glm-5.3-flash | deepseek-v4.1-flash
 model: glm-5.3-flash

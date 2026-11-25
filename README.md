@@ -2,14 +2,14 @@
 
 [![CI](https://github.com/Sreeju7733/bharatcode-review-action/actions/workflows/ci.yml/badge.svg)](https://github.com/Sreeju7733/bharatcode-review-action/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Sreeju7733/bharatcode-review-action?color=purple&label=Release)](https://github.com/Sreeju7733/bharatcode-review-action/releases)
-[![Marketplace](https://img.shields.io/badge/Marketplace-BharatCode%20Reviewer-blueviolet?logo=github-actions)](https://github.com/marketplace/actions/bharatcode-pr-reviewer)
+[![Marketplace](https://img.shields.io/badge/Marketplace-BharatCode%20Reviewer-blueviolet?logo=github-actions)](https://github.com/marketplace/actions/bharatcode-pr-reviewer-by-flovo)
 [![Documentation](https://img.shields.io/badge/Docs-GitHub%20Pages-blue)](https://sreeju7733.github.io/bharatcode-review-action/docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Automated, cost-aware AI code review for GitHub pull requests. BharatCode analyzes unified diffs, surfaces security vulnerabilities and logic bugs, posts inline comments with one-click GitHub suggestions, updates PR severity labels, and provides enforceable gate check-runs.
 
 ```yaml
-- uses: BharatCode-ai/bharatcode-review-action@v1
+- uses: Sreeju7733/bharatcode-review-action@v1
   with:
     bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -83,7 +83,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run BharatCode Reviewer
-        uses: BharatCode-ai/bharatcode-review-action@v1
+        uses: Sreeju7733/bharatcode-review-action@v1
         with:
           bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -147,7 +147,7 @@ on:
 
 jobs:
   review:
-    uses: BharatCode-ai/bharatcode-review-action/.github/workflows/reusable-review.yml@v1
+    uses: Sreeju7733/bharatcode-review-action/.github/workflows/reusable-review.yml@v1
     secrets:
       BHARATCODE_API_KEY: ${{ secrets.BHARATCODE_API_KEY }}
 ```
@@ -251,7 +251,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Review
-        uses: BharatCode-ai/bharatcode-review-action@v1
+        uses: Sreeju7733/bharatcode-review-action@v1
         with:
           bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -290,7 +290,7 @@ Integrate findings into **GitHub Advanced Security Code Scanning**:
 
 ```yaml
 - name: Run Review with SARIF
-  uses: BharatCode-ai/bharatcode-review-action@v1
+  uses: Sreeju7733/bharatcode-review-action@v1
   with:
     bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -311,7 +311,7 @@ Integrate findings into **GitHub Advanced Security Code Scanning**:
 Ensure 99.99% review availability during upstream provider outages:
 
 ```yaml
-- uses: BharatCode-ai/bharatcode-review-action@v1
+- uses: Sreeju7733/bharatcode-review-action@v1
   with:
     bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
     github-token: ${{ secrets.GITHUB_TOKEN }}

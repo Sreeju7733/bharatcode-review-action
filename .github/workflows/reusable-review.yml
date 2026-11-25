@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run BharatCode Review Action
-        uses: BharatCode-ai/bharatcode-review-action@v1
+        uses: Sreeju7733/bharatcode-review-action@v1
         with:
           bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
           github-token: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}

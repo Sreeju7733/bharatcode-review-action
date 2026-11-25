@@ -16,7 +16,7 @@ We welcome contributions to BharatCode PR Reviewer. This guide outlines the deve
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/BharatCode-ai/bharatcode-review-action.git
+   git clone https://github.com/Sreeju7733/bharatcode-review-action.git
    cd bharatcode-review-action
    ```
 
