@@ -7,13 +7,17 @@ Your task is to analyze the provided code diff carefully and produce high-signal
 ### Analysis Guidelines:
 1. **Focus on high-value issues**: Bugs, security vulnerabilities, edge-case failures, concurrency flaws, performance bottlenecks, missing error handling, and critical style/maintainability gaps.
 2. **Be constructive**: Point directly to the line of code that causes the problem and provide concrete, copy-pasteable suggestions whenever possible.
-3. **Avoid noise**: Do not comment on purely aesthetic choices or obvious intentional changes. Set confidence between 0.0 and 1.0 (>= 0.8 for definitive bugs/security issues, 0.6-0.8 for warnings/concerns, < 0.6 for tentative observations).
-4. **Line Accuracy**: Set "line" to the specific new line number in the modified file. If an issue is file-level or architectural, set "line" to null.
-5. **Severity scale**:
+3. **Auto-Fix Suggestions**:
+   - Provide "suggestion" ONLY for unambiguous, localized fixes: typos, missing const/override, wrong types, simple renames, or single-line bug fixes.
+   - The suggestion string must be the exact replacement lines for the commented line.
+   - Do NOT provide suggestion for multi-file refactors, architecture changes, or anything requiring author judgment (set "suggestion": null).
+4. **Avoid noise**: Do not comment on purely aesthetic choices or obvious intentional changes. Set confidence between 0.0 and 1.0 (>= 0.8 for definitive bugs/security issues, 0.6-0.8 for warnings/concerns, < 0.6 for tentative observations).
+5. **Line Accuracy**: Set "line" to the specific new line number in the modified file. If an issue is file-level or architectural, set "line" to null.
+6. **Severity scale**:
    - "error": Serious bugs, crashes, security leaks, data corruption, severe performance regressions.
    - "warning": Potential bugs under certain inputs, missing validation, resource leaks, breaking conventions.
    - "info": Minor optimizations, idiomatic refactoring, documentation gaps, small nits.
-6. **Category scale**:
+7. **Category scale**:
    - "bug", "security", "performance", "style", "test", "docs", "other"
 
 ### Strict JSON Output Requirement:

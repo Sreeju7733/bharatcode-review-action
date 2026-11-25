@@ -1,5 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import fs from "fs";
+import path from "path";
 import pLimit from "p-limit";
 import { parseInputs } from "./inputs.js";
 import { loadRepoConfig, mergeConfig } from "./config.js";
@@ -16,6 +18,7 @@ import { formatSummaryComment, upsertSummaryComment } from "./github/comments.js
 import { postInlineReview } from "./github/review.js";
 import { syncLabels } from "./github/labels.js";
 import { createCheckRun } from "./github/checks.js";
+import { convertFindingsToSarif } from "./sarif.js";
 import { Telemetry } from "./telemetry.js";
 import { BudgetExceededError, ConfigError } from "./errors.js";
 import { ChunkReview, Finding } from "./types.js";
@@ -51,34 +54,80 @@ export async function run(): Promise<void> {
     const repoConfig = loadRepoConfig(inputs.configPath);
     const { effectiveInputs, rules, paths } = mergeConfig(inputs, repoConfig);
 
+    // Check if event is pull_request OR issue_comment on a PR
     const context = github.context;
-    const pullRequest = context.payload.pull_request;
-
-    if (!pullRequest) {
-      core.info("Event is not a pull_request. Skipping BharatCode PR review.");
-      return;
-    }
-
-    const prNumber = pullRequest.number;
-    const commitSha = pullRequest.head.sha;
+    let prNumber: number;
+    let commitSha: string;
     const owner = context.repo.owner;
     const repo = context.repo.repo;
 
-    core.info(`Processing PR #${prNumber} on ${owner}/${repo} (Head SHA: ${commitSha})`);
-
-    // Fork guard: skip if head repo full name is different, unless allow-forks is true
-    const headRepoFullName = pullRequest.head?.repo?.full_name;
-    const baseRepoFullName = pullRequest.base?.repo?.full_name || `${owner}/${repo}`;
-    if (headRepoFullName && headRepoFullName !== baseRepoFullName && !effectiveInputs.allowForks) {
-      core.info(
-        `Skipping review: Pull request is from a fork (${headRepoFullName}) and allow-forks is disabled.`
-      );
-      return;
-    }
+    const pullRequest = context.payload.pull_request;
+    const issue = context.payload.issue;
+    const comment = context.payload.comment;
 
     const octokit = github.getOctokit(effectiveInputs.githubToken, {
       request: { fetch: globalThis.fetch },
     });
+
+    if (pullRequest) {
+      prNumber = pullRequest.number;
+      commitSha = pullRequest.head.sha;
+
+      // Fork guard: skip if head repo full name is different, unless allow-forks is true
+      const headRepoFullName = pullRequest.head?.repo?.full_name;
+      const baseRepoFullName = pullRequest.base?.repo?.full_name || `${owner}/${repo}`;
+      if (headRepoFullName && headRepoFullName !== baseRepoFullName && !effectiveInputs.allowForks) {
+        core.info(
+          `Skipping review: Pull request is from a fork (${headRepoFullName}) and allow-forks is disabled.`
+        );
+        return;
+      }
+    } else if (issue && issue.pull_request && comment) {
+      // Triggered by issue_comment
+      const commentBody = comment.body?.trim() || "";
+      if (!commentBody.startsWith("/bharatcode review")) {
+        core.info("Comment does not trigger /bharatcode review. Skipping.");
+        return;
+      }
+
+      // Permission check: only allow OWNER, MEMBER, or COLLABORATOR
+      const authorAssoc = comment.author_association;
+      const allowedAssoc = ["OWNER", "MEMBER", "COLLABORATOR"];
+      if (!allowedAssoc.includes(authorAssoc)) {
+        core.warning(
+          `User ${comment.user?.login} has association '${authorAssoc}' and is not authorized to trigger /bharatcode review.`
+        );
+        return;
+      }
+
+      prNumber = issue.number;
+      core.info(`Triggered via slash command on PR #${prNumber} by ${comment.user?.login}`);
+
+      // Add 👀 reaction to triggering comment
+      try {
+        await octokit.rest.reactions.createForIssueComment({
+          owner,
+          repo,
+          comment_id: comment.id,
+          content: "eyes",
+        });
+      } catch (e: any) {
+        core.debug(`Failed to add reaction to comment: ${e.message}`);
+      }
+
+      // Fetch PR head SHA
+      const prDetails = await octokit.rest.pulls.get({
+        owner,
+        repo,
+        pull_number: prNumber,
+      });
+      commitSha = prDetails.data.head.sha;
+    } else {
+      core.info("Event is neither a pull_request nor a PR issue_comment. Skipping BharatCode PR review.");
+      return;
+    }
+
+    core.info(`Processing PR #${prNumber} on ${owner}/${repo} (Head SHA: ${commitSha})`);
 
     // 1. Fetch Diff
     const diffSpan = telemetry.startSpan("fetch_and_parse_diff");
@@ -157,6 +206,9 @@ export async function run(): Promise<void> {
         baseUrl: effectiveInputs.bharatcodeBaseUrl,
         timeoutMs: effectiveInputs.requestTimeoutMs,
         maxRetries: effectiveInputs.maxRetries,
+        fallbackProviders: effectiveInputs.fallbackProviders,
+        openaiApiKey: effectiveInputs.openaiApiKey,
+        anthropicApiKey: effectiveInputs.anthropicApiKey,
       });
 
       const pricing = MODEL_PRICING[effectiveInputs.model] || MODEL_PRICING.default;
@@ -247,7 +299,15 @@ export async function run(): Promise<void> {
       )}`
     );
 
-    // 7. Dry-Run Handling
+    // 7. SARIF Export (if enabled)
+    if (effectiveInputs.sarifOutput) {
+      const sarifReport = convertFindingsToSarif(aggregatedFindings);
+      const outPath = path.resolve(process.cwd(), effectiveInputs.sarifPath);
+      fs.writeFileSync(outPath, JSON.stringify(sarifReport, null, 2), "utf-8");
+      core.info(`Generated SARIF 2.1.0 report at ${outPath}`);
+    }
+
+    // 8. Dry-Run Handling
     if (effectiveInputs.dryRun) {
       core.info("ℹ️ Running in DRY-RUN mode. Write API calls will be skipped.");
       console.log("=== DRY RUN SUMMARY ===");

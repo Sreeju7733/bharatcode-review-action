@@ -75,6 +75,25 @@ inputs:
     required: false
     default: "true"
 
+  # SARIF output & Code Scanning
+  sarif-output:
+    required: false
+    default: "false"
+  sarif-path:
+    required: false
+    default: "bharatcode-review.sarif"
+
+  # Multi-provider fallback
+  fallback-providers:
+    required: false
+    default: ""               # e.g. "openai,anthropic"
+  openai-api-key:
+    required: false
+    description: "OpenAI API key for fallback"
+  anthropic-api-key:
+    required: false
+    description: "Anthropic API key for fallback"
+
   # Safety
   allow-forks:
     required: false

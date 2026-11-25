@@ -30,6 +30,9 @@ describe("Repo Config (.bharatcode-review.yml loader & merge)", () => {
     cacheEnabled: true,
     allowForks: false,
     configPath: ".test-repo-config.yml",
+    sarifOutput: false,
+    sarifPath: "bharatcode-review.sarif",
+    fallbackProviders: [],
   };
 
   afterEach(() => {

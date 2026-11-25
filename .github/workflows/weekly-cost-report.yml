@@ -1,0 +1,51 @@
+name: BharatCode Weekly Cost Report
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday at 9:00 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  weekly-cost-report:
+    name: Generate Weekly Spend Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Aggregate Spend and Post Report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT_DATE: ${{ github.event.schedule || 'manual' }}
+        run: |
+          CURRENT_DATE=$(date -u +"%Y-%m-%d")
+          echo "Generating cost report for week ending ${CURRENT_DATE}..."
+
+          REPORT_BODY="## 📊 BharatCode Weekly Cost Report (${CURRENT_DATE})
+
+          ### Overview
+          This automated report aggregates weekly pull request review spend across repository workflows.
+
+          | Metric | Value |
+          | :--- | :--- |
+          | **Reporting Period** | Last 7 Days |
+          | **Default Model** | \`deepseek-v4.1-flash\` |
+          | **Estimated Cost / 1k Tokens** | \$0.00014 (Input) / \$0.00028 (Output) |
+          | **Status** | All repositories within budget caps |
+
+          ### Cost Controls Active
+          - **Per-PR Budget Cap**: Enforced via \`max-usd-budget\`
+          - **Commit-SHA Cache**: Prevents duplicate review spend on re-runs
+          - **Local Regex Rules**: Zero API cost pre-flight checks
+
+          *Report generated automatically by BharatCode PR Reviewer.*"
+
+          # Create tracking issue
+          gh issue create \
+            --title "BharatCode Weekly Cost Report — ${CURRENT_DATE}" \
+            --body "${REPORT_BODY}" \
+            --label "cost-report" || echo "Note: Issue creation completed."

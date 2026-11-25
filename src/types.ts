@@ -43,6 +43,11 @@ export interface ActionInputs {
   cacheEnabled: boolean;
   allowForks: boolean;
   configPath: string;
+  sarifOutput: boolean;
+  sarifPath: string;
+  fallbackProviders: string[];
+  openaiApiKey?: string;
+  anthropicApiKey?: string;
 }
 
 export interface RuleConfig {

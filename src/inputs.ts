@@ -101,6 +101,18 @@ export function parseInputs(): ActionInputs {
   const allowForks = core.getBooleanInput("allow-forks");
   const configPath = core.getInput("config-path") || ".bharatcode-review.yml";
 
+  const sarifOutput = core.getBooleanInput("sarif-output");
+  const sarifPath = core.getInput("sarif-path") || "bharatcode-review.sarif";
+
+  const fallbackProvidersInput = core.getInput("fallback-providers") || "";
+  const fallbackProviders = fallbackProvidersInput
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+
+  const openaiApiKey = core.getInput("openai-api-key") || process.env.OPENAI_API_KEY || undefined;
+  const anthropicApiKey = core.getInput("anthropic-api-key") || process.env.ANTHROPIC_API_KEY || undefined;
+
   return {
     bharatcodeApiKey,
     bharatcodeBaseUrl,
@@ -124,5 +136,10 @@ export function parseInputs(): ActionInputs {
     cacheEnabled,
     allowForks,
     configPath,
+    sarifOutput,
+    sarifPath,
+    fallbackProviders,
+    openaiApiKey,
+    anthropicApiKey,
   };
 }

@@ -1,0 +1,30 @@
+name: BharatCode Slash Command Dispatch
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  issues: write
+  checks: write
+  contents: read
+
+jobs:
+  slash-review:
+    name: Run On-Demand Review
+    if: |
+      github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/bharatcode review')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run BharatCode Review
+        uses: ./
+        with:
+          bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mode: "summary+inline"
+          post-labels: "true"

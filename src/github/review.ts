@@ -48,7 +48,9 @@ export async function postInlineReview(
       }
 
       let commentBody = `**[${f.severity.toUpperCase()}] ${f.title}** (\`${f.category}\`)\n\n${f.message}`;
-      if (f.suggestion) {
+      
+      // Auto-fix suggestions: check that suggestion exists and is non-empty
+      if (f.suggestion && f.suggestion.trim()) {
         commentBody += `\n\n\`\`\`suggestion\n${f.suggestion}\n\`\`\``;
       }
 
