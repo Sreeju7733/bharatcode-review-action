@@ -1,6 +1,6 @@
 name: "BharatCode PR Reviewer by Flovo"
 description: "Open-source AI pull request reviewer by Flovo: inline comments, suggestions, and auto-labels"
-author: "Flovo"
+author: "Sreeju S (Flovo Labs)"
 branding:
   icon: "check-circle"
   color: "purple"
