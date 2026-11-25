@@ -93,7 +93,7 @@ describe("End-to-End Integration Scenarios (MSW Mocked)", () => {
     }),
 
     // 8. BharatCode Chat Completions
-    http.post("https://api.bharatcode.ai/v1/chat/completions", async () => {
+    http.post("https://bharatcode.ai/api/model/v1/chat/completions", async () => {
       return HttpResponse.json({
         choices: [
           {
@@ -158,7 +158,7 @@ describe("End-to-End Integration Scenarios (MSW Mocked)", () => {
         case "github-token":
           return "gh-test-token";
         case "bharatcode-base-url":
-          return "https://api.bharatcode.ai/v1";
+          return "https://bharatcode.ai/api/model/v1";
         case "model":
           return "deepseek-v4.1-flash";
         case "chunk-strategy":
@@ -234,7 +234,7 @@ describe("End-to-End Integration Scenarios (MSW Mocked)", () => {
   it("Scenario 3: API 500 twice then 200 succeeds via retry", async () => {
     let attempts = 0;
     server.use(
-      http.post("https://api.bharatcode.ai/v1/chat/completions", () => {
+      http.post("https://bharatcode.ai/api/model/v1/chat/completions", () => {
         attempts++;
         if (attempts <= 2) {
           return new HttpResponse("Server Error", { status: 500 });
@@ -255,7 +255,7 @@ describe("End-to-End Integration Scenarios (MSW Mocked)", () => {
   // Scenario 4: API 500 x 4 -> fails with clear message
   it("Scenario 4: API 500 x 4 fails with clear message", async () => {
     server.use(
-      http.post("https://api.bharatcode.ai/v1/chat/completions", () => {
+      http.post("https://bharatcode.ai/api/model/v1/chat/completions", () => {
         return new HttpResponse("Permanent 500 Error", { status: 500 });
       })
     );

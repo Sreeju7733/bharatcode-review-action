@@ -23,7 +23,7 @@ describe("BharatCode Client (client.ts)", () => {
 
     const client = new BharatCodeClient({
       apiKey: "test-key",
-      baseUrl: "https://api.bharatcode.ai/v1",
+      baseUrl: "https://bharatcode.ai/api/model/v1",
       timeoutMs: 5000,
       maxRetries: 3,
     });
@@ -59,7 +59,7 @@ describe("BharatCode Client (client.ts)", () => {
 
     const client = new BharatCodeClient({
       apiKey: "test-key",
-      baseUrl: "https://api.bharatcode.ai/v1",
+      baseUrl: "https://bharatcode.ai/api/model/v1",
       timeoutMs: 5000,
       maxRetries: 3,
     });
@@ -83,7 +83,7 @@ describe("BharatCode Client (client.ts)", () => {
 
     const client = new BharatCodeClient({
       apiKey: "test-key",
-      baseUrl: "https://api.bharatcode.ai/v1",
+      baseUrl: "https://bharatcode.ai/api/model/v1",
       timeoutMs: 1000,
       maxRetries: 2,
     });
@@ -116,7 +116,7 @@ describe("BharatCode Client (client.ts)", () => {
 
     const client = new BharatCodeClient({
       apiKey: "test-key",
-      baseUrl: "https://api.bharatcode.ai/v1",
+      baseUrl: "https://bharatcode.ai/api/model/v1",
       timeoutMs: 5000,
       maxRetries: 2,
     });

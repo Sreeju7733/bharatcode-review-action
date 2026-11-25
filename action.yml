@@ -11,7 +11,7 @@ inputs:
     description: "BharatCode API key"
   bharatcode-base-url:
     required: false
-    default: "https://api.bharatcode.ai/v1"
+    default: "https://bharatcode.ai/api/model/v1"
   model:
     required: false
     default: "deepseek-v4.1-flash"
