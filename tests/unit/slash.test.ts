@@ -31,35 +31,43 @@ describe("Slash Command Handling (/bharatcode review)", () => {
   });
 
   it("ignores issue_comment not starting with /bharatcode review", async () => {
-    (github as any).context = {
-      payload: {
-        issue: { pull_request: {}, number: 42 },
-        comment: {
-          id: 100,
-          body: "Just a regular comment",
-          author_association: "MEMBER",
+    Object.defineProperty(github, "context", {
+      value: {
+        payload: {
+          issue: { pull_request: {}, number: 42 },
+          comment: {
+            id: 100,
+            body: "Just a regular comment",
+            author_association: "MEMBER",
+          },
         },
+        repo: { owner: "owner", repo: "repo" },
       },
-      repo: { owner: "owner", repo: "repo" },
-    };
+      writable: true,
+      configurable: true,
+    });
 
     await run();
     expect(setFailedMessages.length).toBe(0);
   });
 
   it("blocks non-authorized users (e.g. NONE)", async () => {
-    (github as any).context = {
-      payload: {
-        issue: { pull_request: {}, number: 42 },
-        comment: {
-          id: 100,
-          body: "/bharatcode review",
-          author_association: "NONE",
-          user: { login: "untrusted-user" },
+    Object.defineProperty(github, "context", {
+      value: {
+        payload: {
+          issue: { pull_request: {}, number: 42 },
+          comment: {
+            id: 100,
+            body: "/bharatcode review",
+            author_association: "NONE",
+            user: { login: "untrusted-user" },
+          },
         },
+        repo: { owner: "owner", repo: "repo" },
       },
-      repo: { owner: "owner", repo: "repo" },
-    };
+      writable: true,
+      configurable: true,
+    });
 
     await run();
     expect(setFailedMessages.length).toBe(0);

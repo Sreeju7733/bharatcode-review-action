@@ -182,17 +182,21 @@ describe("End-to-End Integration Scenarios (MSW Mocked)", () => {
       return false;
     });
 
-    // Mock github context
-    (github as any).context = {
-      payload: {
-        pull_request: {
-          number: 10,
-          head: { sha: "head123456", repo: { full_name: "owner/repo" } },
-          base: { repo: { full_name: "owner/repo" } },
+    // Mock github context via Object.defineProperty
+    Object.defineProperty(github, "context", {
+      value: {
+        payload: {
+          pull_request: {
+            number: 10,
+            head: { sha: "head123456", repo: { full_name: "owner/repo" } },
+            base: { repo: { full_name: "owner/repo" } },
+          },
         },
+        repo: { owner: "owner", repo: "repo" },
       },
-      repo: { owner: "owner", repo: "repo" },
-    };
+      writable: true,
+      configurable: true,
+    });
   });
 
   afterEach(() => {
