@@ -1,0 +1,53 @@
+name: BharatCode Organization-Wide Automated PR Review
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        description: "Review mode: summary | inline | summary+inline | gate"
+        required: false
+        type: string
+        default: "summary+inline"
+      severity-threshold:
+        description: "Minimum severity threshold: info | warning | error"
+        required: false
+        type: string
+        default: "warning"
+      fail-on-severity:
+        description: "Fail check if reached: none | error | warning"
+        required: false
+        type: string
+        default: "error"
+      cache-enabled:
+        description: "Enable commit-SHA review caching"
+        required: false
+        type: boolean
+        default: true
+    secrets:
+      BHARATCODE_API_KEY:
+        required: true
+      GH_TOKEN:
+        required: false
+
+jobs:
+  review:
+    name: BharatCode AI Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      checks: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run BharatCode Review Action
+        uses: BharatCode-ai/bharatcode-review-action@v1
+        with:
+          bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
+          github-token: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+          mode: ${{ inputs.mode }}
+          severity-threshold: ${{ inputs.severity-threshold }}
+          fail-on-severity: ${{ inputs.fail-on-severity }}
+          cache-enabled: ${{ inputs.cache-enabled }}
