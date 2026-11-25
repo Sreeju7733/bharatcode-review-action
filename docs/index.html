@@ -1,143 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BharatCode PR Reviewer Documentation</title>
-  <meta name="description" content="Production-grade AI code reviewer GitHub Action documentation. Automated inline suggestions, summaries, labels, and organization-wide rollout.">
+  <meta name="description" content="Open-source AI pull request code review action by Flovo. Automated inline review suggestions, PR summaries, severity labels, and organization rollout.">
   <link rel="icon" href="https://bharatcode.ai/icon.svg" type="image/svg+xml">
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <!-- Navigation Header -->
   <header class="navbar">
     <div class="nav-container">
       <div class="brand">
-        <span class="brand-icon">👁️</span>
-        <span class="brand-name">BharatCode <span class="brand-sub">Review Action</span></span>
-        <span class="version-badge">v1.0.0</span>
+        <span class="brand-name">BharatCode PR Reviewer</span>
+        <span class="brand-by">by Flovo</span>
+        <span class="version-tag">v1.0.0</span>
       </div>
       <nav class="nav-links">
         <a href="#overview">Overview</a>
         <a href="#quickstart">Quickstart</a>
-        <a href="#org-rollout">Org Rollout</a>
+        <a href="#organization-rollout">Org Rollout</a>
         <a href="#configuration">Configuration</a>
-        <a href="#multi-provider">Failover</a>
-        <a href="https://github.com/Sreeju7733/bharatcode-review-action" class="github-btn" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="#failover">Failover</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-toggle-text">Theme</span>
+        </button>
+        <a href="https://github.com/Sreeju7733/bharatcode-review-action" class="github-link" target="_blank" rel="noopener">GitHub</a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-container">
-      <div class="badge-pill">🚀 Production Verified GitHub Action</div>
-      <h1>Open-Source PR Reviewer for GitHub Teams</h1>
-      <p class="hero-subtitle">
-        Automate code quality, security audits, and inline GitHub review suggestions across individual repositories or entire organizations with zero-token local regex pre-checks and multi-provider failover.
+      <span class="status-pill">Open Source GitHub Action</span>
+      <h1>Automated Code Review for Pull Requests</h1>
+      <p class="hero-desc">
+        Evaluate unified diffs, surface security and logic defects, publish inline one-click suggestions, and enforce merge gates using BharatCode AI models.
       </p>
-      <div class="hero-actions">
-        <a href="#quickstart" class="btn btn-primary">Get Started in 60s</a>
-        <a href="#org-rollout" class="btn btn-secondary">Multi-Repo Org Rollout</a>
+      <div class="hero-cta">
+        <a href="#quickstart" class="btn btn-primary">Quickstart</a>
+        <a href="#organization-rollout" class="btn btn-secondary">Organization Rollout</a>
       </div>
     </div>
   </section>
 
-  <!-- Main Content Layout -->
   <div class="main-layout container">
-    <!-- Sidebar Navigation -->
     <aside class="sidebar">
-      <div class="sidebar-block">
-        <h4>Getting Started</h4>
+      <div class="sidebar-group">
+        <div class="sidebar-title">Getting Started</div>
         <ul>
-          <li><a href="#overview">What is BharatCode?</a></li>
+          <li><a href="#overview">Overview</a></li>
           <li><a href="#quickstart">Single Repo Setup</a></li>
-          <li><a href="#org-rollout">Deploy to All Repos</a></li>
+          <li><a href="#organization-rollout">Deploy to All Repos</a></li>
         </ul>
       </div>
-      <div class="sidebar-block">
-        <h4>Features & Guides</h4>
+      <div class="sidebar-group">
+        <div class="sidebar-title">Features</div>
         <ul>
-          <li><a href="#inline-suggestions">Inline Review & Suggestions</a></li>
-          <li><a href="#rules-engine">Zero-Cost Regex Engine</a></li>
-          <li><a href="#quality-gates">Enforceable Quality Gates</a></li>
-          <li><a href="#slash-command">Slash Command Dispatch</a></li>
-          <li><a href="#sarif-export">SARIF 2.1.0 Code Scanning</a></li>
-          <li><a href="#cost-controls">Spend & Budget Controls</a></li>
-          <li><a href="#multi-provider">Multi-Provider Failover</a></li>
+          <li><a href="#inline-reviews">Inline Comments</a></li>
+          <li><a href="#regex-rules">Local Regex Rules</a></li>
+          <li><a href="#quality-gates">Quality Gates</a></li>
+          <li><a href="#failover">Provider Failover</a></li>
         </ul>
       </div>
-      <div class="sidebar-block">
-        <h4>Reference</h4>
+      <div class="sidebar-group">
+        <div class="sidebar-title">Reference</div>
         <ul>
-          <li><a href="#inputs-table">Action Inputs</a></li>
-          <li><a href="#config-spec">.bharatcode-review.yml</a></li>
+          <li><a href="#action-inputs">Action Inputs</a></li>
+          <li><a href="#config-file">Repository Config</a></li>
           <li><a href="#supported-models">Supported Models</a></li>
         </ul>
       </div>
     </aside>
 
-    <!-- Main Documentation Articles -->
-    <main class="content-area">
-
-      <!-- Section: Overview -->
-      <section id="overview" class="doc-section">
-        <h2>What is BharatCode PR Reviewer?</h2>
+    <main class="content">
+      <section id="overview" class="section">
+        <h2>Overview</h2>
         <p>
-          <strong>BharatCode PR Reviewer</strong> is an enterprise-grade TypeScript GitHub Action that acts as a tireless, automated senior staff engineer on every Pull Request. It evaluates changed code diffs, highlights anti-patterns, checks for security exploits, provides ready-to-commit code suggestions, and updates severity labels automatically.
+          BharatCode PR Reviewer automates routine pull request feedback. It parses unified diffs, runs local regex checks, sends code chunks to language models for review, and posts structured results back to the pull request.
         </p>
 
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="f-icon">🎯</div>
+        <div class="grid-cards">
+          <div class="card">
             <h3>Inline Review Comments</h3>
-            <p>Maps findings directly to unified diff line numbers with GitHub-native one-click code replacement suggestions.</p>
+            <p>Maps findings directly to modified lines with GitHub-native code suggestion blocks that maintainers can apply in one click.</p>
           </div>
-          <div class="feature-card">
-            <div class="f-icon">🏷️</div>
-            <h3>Auto-Synced Labels</h3>
-            <p>Automatically manages PR labels (<code>bug</code>, <code>needs-review</code>, <code>nit</code>) based on active findings.</p>
+          <div class="card">
+            <h3>Automated Severity Labels</h3>
+            <p>Synchronizes repository labels such as <code>bug</code>, <code>needs-review</code>, and <code>nit</code> based on active findings.</p>
           </div>
-          <div class="feature-card">
-            <div class="f-icon">🛡️</div>
-            <h3>Local Regex Rules</h3>
-            <p>Executes local regex checks before calling AI models, catching banned patterns and secrets at zero API cost.</p>
+          <div class="card">
+            <h3>Pre-Flight Regex Engine</h3>
+            <p>Executes pattern checks locally to catch banned debug statements and secrets before sending diffs to the API.</p>
           </div>
-          <div class="feature-card">
-            <div class="f-icon">🔄</div>
-            <h3>Provider Failover</h3>
-            <p>Cascades to OpenAI (<code>gpt-4o-mini</code>) or Anthropic (<code>claude-3-5-haiku</code>) if the primary API encounters 429 or 5xx.</p>
+          <div class="card">
+            <h3>Multi-Provider Failover</h3>
+            <p>Automatically falls back to OpenAI or Anthropic if the primary API returns temporary rate-limit or outage errors.</p>
           </div>
         </div>
       </section>
 
-      <!-- Section: Quickstart -->
-      <section id="quickstart" class="doc-section">
-        <h2>Single Repository Quickstart</h2>
-        <p>Deploy BharatCode on an individual repository in two quick steps.</p>
+      <section id="quickstart" class="section">
+        <h2>Single Repository Setup</h2>
+        <p>Enable automated reviews on any repository in two steps.</p>
 
-        <div class="step-card">
-          <div class="step-num">1</div>
-          <div class="step-info">
+        <div class="step">
+          <div class="step-badge">1</div>
+          <div class="step-body">
             <h3>Add Repository Secret</h3>
-            <p>Go to your GitHub repository: <strong>Settings</strong> → <strong>Secrets and variables</strong> → <strong>Actions</strong> → <strong>New repository secret</strong>:</p>
+            <p>Navigate to <strong>Settings</strong> &gt; <strong>Secrets and variables</strong> &gt; <strong>Actions</strong> &gt; <strong>New repository secret</strong>:</p>
             <ul>
               <li><strong>Name:</strong> <code>BHARATCODE_API_KEY</code></li>
-              <li><strong>Secret:</strong> Paste your API key from <a href="https://bharatcode.ai" target="_blank">bharatcode.ai</a></li>
+              <li><strong>Secret:</strong> Your API key from bharatcode.ai</li>
             </ul>
           </div>
         </div>
 
-        <div class="step-card">
-          <div class="step-num">2</div>
-          <div class="step-info">
-            <h3>Create Workflow File</h3>
-            <p>Create <code>.github/workflows/bharatcode-review.yml</code> in your repository:</p>
-            <pre><code>name: BharatCode PR Review
+        <div class="step">
+          <div class="step-badge">2</div>
+          <div class="step-body">
+            <h3>Add Workflow File</h3>
+            <p>Save the following as <code>.github/workflows/bharatcode-review.yml</code>:</p>
+            <pre><code>name: BharatCode Review
 
 on:
   pull_request:
@@ -158,7 +145,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run BharatCode Reviewer
-        uses: BharatCode-ai/bharatcode-review-action@v1
+        uses: Sreeju7733/bharatcode-review-action@v1
         with:
           bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -169,56 +156,43 @@ jobs:
         </div>
       </section>
 
-      <!-- Section: Organization Rollout -->
-      <section id="org-rollout" class="doc-section">
-        <h2>Organization-Wide Bulk Rollout (All Repositories)</h2>
-        <p>
-          Deploying across 20, 50, or 200 repositories? You do not need to edit repositories individually. Follow our automated rollout playbook.
-        </p>
+      <section id="organization-rollout" class="section">
+        <h2>Organization-Wide Rollout</h2>
+        <p>Deploy BharatCode across all repositories in an organization using the automated setup script.</p>
 
-        <h3>Step 1: Set Organization Secret</h3>
-        <p>
-          Configure <code>BHARATCODE_API_KEY</code> once at the organization level so every existing and future repository inherits it automatically:
-        </p>
-        <pre><code># Using the GitHub CLI:
-gh secret set BHARATCODE_API_KEY --org "Your-Org-Name" --body "bc_your_api_key" --visibility all</code></pre>
+        <h3>1. Configure Organization Secret</h3>
+        <p>Set the API key at the organization level so repositories inherit it automatically:</p>
+        <pre><code>gh secret set BHARATCODE_API_KEY --org "Your-Org" --body "your_api_key" --visibility all</code></pre>
 
-        <h3>Step 2: Run the Automated PR Rollout Script</h3>
-        <p>
-          We include an enterprise rollout script: <code>scripts/rollout-action.sh</code>. It iterates across all non-archived repositories in your organization, creates a clean branch, commits the review workflow, and opens an automated PR for repository maintainers to merge:
-        </p>
+        <h3>2. Run Bulk Rollout Script</h3>
+        <p>Run the provided script to open pull requests across all non-archived repositories:</p>
         <pre><code>export GH_TOKEN="ghp_your_github_admin_token"
-export BHARATCODE_API_KEY="bc_your_api_key"
+export BHARATCODE_API_KEY="your_api_key"
 
-# Run bulk rollout across all org repos
 ./scripts/rollout-action.sh</code></pre>
 
-        <div class="callout callout-info">
-          <strong>Enterprise Safety Guarantees:</strong>
+        <div class="callout">
+          <strong>Safety Controls:</strong>
           <ul>
-            <li><strong>Pull Requests Only:</strong> The script never pushes directly to default branches.</li>
-            <li><strong>Idempotent:</strong> Skips repositories where the action is already configured.</li>
-            <li><strong>Archived Filter:</strong> Automatically skips archived, template, and disabled repositories.</li>
+            <li>Creates branches and pull requests only; never pushes to default branches.</li>
+            <li>Skips archived, disabled, and already-configured repositories.</li>
           </ul>
         </div>
 
-        <h3>Step 3: Centralized Governance via Reusable Workflow</h3>
-        <p>
-          For centralized policy enforcement, repositories can reference the reusable workflow:
-        </p>
+        <h3>3. Organization Reusable Workflow</h3>
+        <p>Repositories can also reference a central reusable workflow for unified governance:</p>
         <pre><code>jobs:
   review:
-    uses: BharatCode-ai/bharatcode-review-action/.github/workflows/reusable-review.yml@v1
+    uses: Sreeju7733/bharatcode-review-action/.github/workflows/reusable-review.yml@v1
     secrets:
       BHARATCODE_API_KEY: ${{ secrets.BHARATCODE_API_KEY }}</code></pre>
       </section>
 
-      <!-- Section: Configuration Reference -->
-      <section id="configuration" class="doc-section">
+      <section id="configuration" class="section">
         <h2>Configuration Reference</h2>
 
-        <h3 id="inputs-table">Action Inputs</h3>
-        <div class="table-container">
+        <h3 id="action-inputs">Action Inputs</h3>
+        <div class="table-wrap">
           <table>
             <thead>
               <tr>
@@ -230,86 +204,81 @@ export BHARATCODE_API_KEY="bc_your_api_key"
             <tbody>
               <tr>
                 <td><code>bharatcode-api-key</code></td>
-                <td><strong>Required</strong></td>
-                <td>BharatCode API Key (pass via <code>secrets.BHARATCODE_API_KEY</code>).</td>
+                <td>Required</td>
+                <td>API key passed via secrets.BHARATCODE_API_KEY.</td>
               </tr>
               <tr>
                 <td><code>github-token</code></td>
-                <td><strong>Required</strong></td>
-                <td>GitHub Token with <code>pull-requests: write</code> permissions.</td>
+                <td>Required</td>
+                <td>GitHub token with pull-requests: write permission.</td>
               </tr>
               <tr>
                 <td><code>model</code></td>
                 <td><code>glm-5.3-flash</code></td>
-                <td>Evaluation model: <code>glm-5.3-flash</code> (Free 10M/day) or <code>deepseek-v4.1-flash</code> (Pro).</td>
+                <td>Model used for review (glm-5.3-flash or deepseek-v4.1-flash).</td>
               </tr>
               <tr>
                 <td><code>mode</code></td>
                 <td><code>summary+inline</code></td>
-                <td>Review format: <code>summary</code>, <code>inline</code>, <code>summary+inline</code>, or <code>gate</code>.</td>
+                <td>Format: summary, inline, summary+inline, or gate.</td>
               </tr>
               <tr>
                 <td><code>severity-threshold</code></td>
                 <td><code>warning</code></td>
-                <td>Minimum severity level to comment on: <code>info</code>, <code>warning</code>, or <code>error</code>.</td>
+                <td>Minimum severity to report: info, warning, or error.</td>
               </tr>
               <tr>
                 <td><code>fail-on-severity</code></td>
                 <td><code>none</code></td>
-                <td>Fails CI check run if findings match threshold: <code>none</code>, <code>warning</code>, or <code>error</code>.</td>
+                <td>Fails status check on severity: none, warning, or error.</td>
               </tr>
               <tr>
                 <td><code>post-labels</code></td>
                 <td><code>true</code></td>
-                <td>Automatically add/remove severity labels on the PR.</td>
+                <td>Automatically manages PR labels based on findings.</td>
               </tr>
               <tr>
                 <td><code>cache-enabled</code></td>
                 <td><code>true</code></td>
-                <td>Avoid duplicate LLM costs on re-runs by caching commit SHA hashes.</td>
+                <td>Caches review results by commit SHA and prompt version.</td>
               </tr>
               <tr>
                 <td><code>max-usd-budget</code></td>
                 <td><code>0</code></td>
-                <td>Hard spend limit in USD per PR run (<code>0</code> = unlimited).</td>
+                <td>Maximum USD spend cap per PR run (0 = unlimited).</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h3 id="config-spec">Repository Config File (<code>.bharatcode-review.yml</code>)</h3>
-        <p>Place this file in your repository root to configure local zero-cost regex rules and exclusions:</p>
-        <pre><code># Model override
-model: glm-5.3-flash
+        <h3 id="config-file">Repository Configuration (.bharatcode-review.yml)</h3>
+        <p>Place this file in the repository root for custom exclusions and regex rules:</p>
+        <pre><code>model: glm-5.3-flash
+severity-threshold: warning
 
-# Excluded patterns
 ignore-globs:
   - "docs/**"
   - "**/*.lock"
   - "**/generated/**"
 
-# Pre-flight zero-cost regex rules
 rules:
   - name: no-console-log
     pattern: 'console\.(log|debug)'
     severity: warning
     category: style
-    message: "Remove console debug statements before production merge."
+    message: "Remove debugging console statements before merge."
 
-  - name: avoid-hardcoded-secrets
+  - name: avoid-hardcoded-keys
     pattern: 'AKIA[0-9A-Z]{16}'
     severity: error
     category: security
-    message: "Potential hardcoded AWS Access Key detected!"</code></pre>
+    message: "Potential AWS access key detected."</code></pre>
       </section>
 
-      <!-- Section: Multi-Provider Failover -->
-      <section id="multi-provider" class="doc-section">
+      <section id="failover" class="section">
         <h2>Multi-Provider Failover</h2>
-        <p>
-          For critical pull request workflows where review checks are required before merging, configure secondary fallback providers. If BharatCode encounters rate limits or temporary network downtime, the action automatically falls back:
-        </p>
-        <pre><code>- uses: BharatCode-ai/bharatcode-review-action@v1
+        <p>Configure fallback providers to maintain review continuity during upstream outages:</p>
+        <pre><code>- uses: Sreeju7733/bharatcode-review-action@v1
   with:
     bharatcode-api-key: ${{ secrets.BHARATCODE_API_KEY }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -317,21 +286,45 @@ rules:
     openai-api-key: ${{ secrets.OPENAI_API_KEY }}
     anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}</code></pre>
       </section>
-
     </main>
   </div>
 
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-container">
       <p>BharatCode PR Reviewer &bull; Created by <a href="https://github.com/Sreeju7733">Sreeju S</a> &amp; <a href="https://github.com/flovo-labs">Flovo</a> &bull; MIT License</p>
       <div class="footer-links">
-        <a href="https://github.com/Sreeju7733/bharatcode-review-action">GitHub Repository</a>
+        <a href="https://github.com/Sreeju7733/bharatcode-review-action">Repository</a>
         <a href="https://github.com/flovo-labs">Flovo</a>
         <a href="https://bharatcode.ai">BharatCode Platform</a>
-        <a href="https://github.com/Sreeju7733/bharatcode-review-action/blob/main/LICENSE">MIT License</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    const toggleBtn = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    // Check system or saved preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      html.setAttribute('data-theme', savedTheme);
+      updateToggleText(savedTheme);
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      html.setAttribute('data-theme', 'light');
+      updateToggleText('light');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateToggleText(next);
+    });
+
+    function updateToggleText(theme) {
+      toggleBtn.querySelector('.theme-toggle-text').textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+  </script>
 </body>
 </html>
